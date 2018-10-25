@@ -1,32 +1,20 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import "typeface-roboto";
 import "@material-ui/icons";
-import Button from "@material-ui/core/Button";
+
+import Todo from "./todo/todo";
+import About from "./about/about";
+import Menu from "./template/menu";
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-            <Button variant="contained" color="primary">
-              Hello World
-            </Button>
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <React.Fragment>
+        <Menu />
+        <Todo />
+        <About />
+      </React.Fragment>
     );
   }
 }
