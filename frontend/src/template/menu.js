@@ -1,5 +1,4 @@
 import React from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
@@ -26,7 +25,7 @@ const Menu = props => {
 
   return (
     <React.Fragment>
-      <CssBaseline />
+      
       <AppBar position="static" color="default" className={classes.appBar}>
         <Toolbar>
           <Typography
@@ -37,8 +36,8 @@ const Menu = props => {
           >
             React Todo App
           </Typography>
-          <Button>Todos</Button>
-          <Button>About</Button>
+          <Button href='#/todos'>Todos</Button>
+          <Button href='#/about'>About</Button>
         </Toolbar>
       </AppBar>
     </React.Fragment>
