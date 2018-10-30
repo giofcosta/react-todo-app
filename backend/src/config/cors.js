@@ -1,6 +1,8 @@
 module.exports = function(req, res, next) {
-    res.header('Acces-Control-Allow-Origin', '*')
-	res.header('Acces-Control-Allow-Methods', 'GET', 'POST','OPTION','PUT', 'PATCH', 'DELETE')
-	res.header('Acces-Control-Allow-Headers', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept')
+	res.setHeader('Access-Control-Expose-Headers', 'Access-Control-*, Origin, X-Requested-With, Content-Type, Accept, Authorization');
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'Access-Control-*, Origin, X-Requested-With, Content-Type, Accept, Authorization');
+	res.setHeader('Access-Control-Allow-Credentials', true);
 	next()
 }
