@@ -17,15 +17,22 @@ export default class Todo extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { description: "", list: [] };
-
+    this.state = { description: "", list: [], filteredList: [] };
+    this.handleClear = this.handleClear.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleMarkAsDone = this.handleMarkAsDone.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.filterList = this.filterList.bind(this);
 
     this.refresh();
+  }
+
+  filterList(term) {
+    return term
+      ? this.state.list.filter(t => t.description.includes(term))
+      : this.state.list;
   }
 
   async handleAdd() {
@@ -38,15 +45,36 @@ export default class Todo extends React.Component {
     this.refresh();
   }
 
-  async refresh() {
+  async refresh(term) {
     const response = await axios.get("/todos?sort=done");
-    this.setState({ ...this.state, description: "", list: response.data });
+    const filteredData = term
+      ? response.data.filter(t => t.description.includes(term))
+      : response.data;
+
+    this.setState({
+      ...this.state,
+      description: "",
+      list: response.data,
+      filteredList: filteredData
+    });
+
     console.log(response.data);
   }
 
   async handleChange(e) {
     console.log("change");
-    this.setState({ ...this.state, description: e.target.value });
+    //filtra a lista
+    this.setState({
+      ...this.state,
+      description: e.target.value,
+      filteredList: this.state.list.filter(t =>
+        t.description.includes(e.target.value)
+      )
+    });
+  }
+
+  handleClear() {
+    this.setState({...this.state, description: '', filteredList: this.state.list })
   }
 
   async handleRemove(todo) {
@@ -57,11 +85,11 @@ export default class Todo extends React.Component {
   }
 
   async handleMarkAsDone(todo) {
-    todo.done = !todo.done
+    todo.done = !todo.done;
     await axios.put(`/todos/${todo._id}`, todo);
     this.refresh();
   }
-  
+
   render() {
     return (
       <React.Fragment>
@@ -70,9 +98,10 @@ export default class Todo extends React.Component {
           description={this.state.description}
           handleAdd={this.handleAdd}
           handleChange={this.handleChange}
+          handleClear={this.handleClear}
         />
         <TodoList
-          list={this.state.list}
+          list={this.state.filteredList}
           handleRemove={this.handleRemove}
           handleMarkAsDone={this.handleMarkAsDone}
         />

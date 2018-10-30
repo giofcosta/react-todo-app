@@ -11,13 +11,13 @@ import {
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
-const styles = theme => ({
-  container: {
-    marginRight: '30px',
-  },
-  markAsDone: {
+const styles = () => ({
+    markAsDone: {
     textDecoration: 'line-through',
     color: '#aaa'
+  },
+  removeButton: {
+    marginRight: '30px'
   },
   list: {
     //marginRight: '100px'
@@ -29,7 +29,7 @@ class TodoList extends React.Component {
     const { classes, list } = this.props;
 
     return (
-      <div className={classes.container}>
+      <div>
         <List>
           {list.map((item, i) => (
             <ListItem
@@ -44,6 +44,7 @@ class TodoList extends React.Component {
               <ListItemSecondaryAction>
                 <IconButton
                   aria-label="Remove"
+                  className={classes.removeButton}
                   onClick={() => this.props.handleRemove(item)}
                 >
                   <Delete />
