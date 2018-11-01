@@ -1,4 +1,8 @@
 import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { remove, complete } from "./todoActions";
+import { styles } from "./styles";
 
 import {
   List,
@@ -11,41 +15,30 @@ import {
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
-const styles = () => ({
-    markAsDone: {
-    textDecoration: 'line-through',
-    color: '#aaa'
-  },
-  removeButton: {
-    marginRight: '30px'
-  },
-  list: {
-    //marginRight: '100px'
-  }
-});
-
 class TodoList extends React.Component {
   render() {
-    const { classes, list } = this.props;
+    const { classes, filteredList } = this.props;
 
     return (
       <div>
         <List>
-          {list.map((item, i) => (
+          {filteredList.map((item, i) => (
             <ListItem
-            className={classes.list}
               key={i}
               dense
               button
-              onClick={() => this.props.handleMarkAsDone(item)}
+              onClick={() => this.props.complete(item)}
             >
               <Checkbox checked={item.done} tabIndex={-1} disableRipple />
-              <ListItemText primary={item.description} classes={{primary: item.done ? classes.markAsDone : ''}} />
+              <ListItemText
+                primary={item.description}
+                classes={{ primary: item.done ? classes.markAsDone : "" }}
+              />
               <ListItemSecondaryAction>
                 <IconButton
                   aria-label="Remove"
                   className={classes.removeButton}
-                  onClick={() => this.props.handleRemove(item)}
+                  onClick={() => this.props.remove(item)}
                 >
                   <Delete />
                 </IconButton>
@@ -58,4 +51,23 @@ class TodoList extends React.Component {
   }
 }
 
-export default withStyles(styles)(TodoList);
+const mapStateToProps = state => ({
+  list: state.todo.list,
+  filteredList: state.todo.filteredList
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      remove,
+      complete
+    },
+    dispatch
+  );
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(TodoList)
+);
