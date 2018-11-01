@@ -1,64 +1,79 @@
 import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { changeDescription, search, add, clear } from "./todoActions";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, Button } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import { styles } from "./styles";
 
-const styles = () => ({
-  flexContainer: {
-    display: "flex",
-    marginRight: "30px",
-    "& >div": {
-      color: "white",
-      margin: "10px",
-      textAlign: "center",
-      lineHeight: "75px",
-      fontSize: "30px"
-    }
-  },
-  flexTextField: {
-    flexGrow: 8,
-    paddingLeft: "20px"
+const resources = {
+  addOrSearch: "Search or Add",
+};
+
+class TodoForm extends React.Component {
+  componentWillMount() {
+    //set focus
+    this.props.search();
   }
-});
 
-function TodoForm(props) {
-  const { classes } = props;
-  const keyHandler = e => {
+  keyHandler = e => {
     if (e.key === "Enter") {
-      props.handleAdd();
+      this.props.add(this.props.description);
     } else if (e.key === "Escape") {
-      props.handleClear();
+      this.props.clear();
     }
   };
 
-  return (
-    <div className={classes.flexContainer}>
-      <div className={classes.flexTextField}>
-        <TextField
-          id="standard-name"
-          variant="outlined"
-          fullWidth
-          label="Name"
-          margin="normal"
-          value={props.description}
-          onChange={props.handleChange}
-          onKeyDown={keyHandler}
-          className={classes.textField}
-        />
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.flexContainer}>
+        <div className={classes.flexTextField}>
+          <TextField
+            id="standard-name"
+            variant="outlined"
+            fullWidth
+            label={resources.addOrSearch}
+            margin="normal"
+            value={this.props.description}
+            onChange={this.props.changeDescription}
+            onKeyDown={this.keyHandler}
+            className={classes.textField}
+          />
+        </div>
+        <div>
+          <Button
+            variant="fab"
+            mini
+            color="primary"
+            aria-label="Add"
+            onClick={() => this.props.add(this.props.description)}
+          >
+            <Add />
+          </Button>
+        </div>
       </div>
-      <div>
-        <Button
-          variant="fab"
-          mini
-          color="primary"
-          aria-label="Add"
-          onClick={props.handleAdd}
-        >
-          <Add />
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
-export default withStyles(styles)(TodoForm);
+const mapStateToProps = state => ({ ...state.todo });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      changeDescription,
+      search,
+      add,
+      clear
+    },
+    dispatch
+  );
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(TodoForm)
+);
